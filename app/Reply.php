@@ -18,6 +18,6 @@ class Reply extends Model
 
     public function likes()
     {
-        return $this->hasMany(Likes::class);
+        return $this->hasMany('App\Likes', 'id', 'reply_id');
     }
 }
