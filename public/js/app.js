@@ -25486,7 +25486,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(17);
-module.exports = __webpack_require__(66);
+module.exports = __webpack_require__(69);
 
 
 /***/ }),
@@ -25500,6 +25500,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuetify__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuetify___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vuetify__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router_router_js__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__helpers_User_js__ = __webpack_require__(66);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -25533,6 +25534,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('AppHome', __webpack_requi
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+
+window.User = __WEBPACK_IMPORTED_MODULE_3__helpers_User_js__["a" /* default */];
+User.logout();
 
 var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
   router: __WEBPACK_IMPORTED_MODULE_2__router_router_js__["a" /* default */]
@@ -71501,7 +71505,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -71529,18 +71533,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             form: {
                 username: null,
                 password: null
-
             }
         };
     },
 
     methods: {
         login: function login() {
-            axios.post('/api/auth/login', this.form).then(function (res) {
-                return console.log(res.data);
-            }).catch(function (error) {
-                return console.log(error.response.data);
-            });
+            User.login(this.form);
         }
     }
 });
@@ -71568,7 +71567,7 @@ var render = function() {
         },
         [
           _c("v-text-field", {
-            attrs: { label: "Uesr Name", required: "" },
+            attrs: { label: "Uesr Name", type: "text", required: "" },
             model: {
               value: _vm.form.username,
               callback: function($$v) {
@@ -71579,7 +71578,12 @@ var render = function() {
           }),
           _vm._v(" "),
           _c("v-text-field", {
-            attrs: { label: "Password", type: "password", required: "" },
+            attrs: {
+              label: "Password",
+              type: "password",
+              autocomplete: "password",
+              required: ""
+            },
             model: {
               value: _vm.form.password,
               callback: function($$v) {
@@ -74291,6 +74295,180 @@ if (inBrowser && window.Vue) {
 
 /***/ }),
 /* 66 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Token__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__AppStorge__ = __webpack_require__(68);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+
+var User = function () {
+   function User() {
+      _classCallCheck(this, User);
+   }
+
+   _createClass(User, [{
+      key: "login",
+      value: function login(data) {
+         var _this = this;
+
+         axios.post('/api/auth/login', data).then(function (res) {
+            return _this.responseAfterLogin(res);
+         }).catch(function (error) {
+            return console.log(error.response.data);
+         });
+      }
+   }, {
+      key: "responseAfterLogin",
+      value: function responseAfterLogin(res) {
+         var access_token = res.data.access_token;
+         var username = res.data.user;
+         if (__WEBPACK_IMPORTED_MODULE_0__Token__["a" /* default */].isValid(access_token)) {
+            __WEBPACK_IMPORTED_MODULE_1__AppStorge__["a" /* default */].store(username, access_token);
+         }
+      }
+   }, {
+      key: "hasToken",
+      value: function hasToken() {
+         var storeToken = __WEBPACK_IMPORTED_MODULE_1__AppStorge__["a" /* default */].getToken();
+         if (storeToken) {
+            return __WEBPACK_IMPORTED_MODULE_0__Token__["a" /* default */].isValid(storeToken) ? true : false;
+         }
+         return false;
+      }
+   }, {
+      key: "loggedIn",
+      value: function loggedIn() {
+         return this.hasToken();
+      }
+   }, {
+      key: "logout",
+      value: function logout() {
+         __WEBPACK_IMPORTED_MODULE_1__AppStorge__["a" /* default */].clear();
+      }
+   }, {
+      key: "name",
+      value: function name() {
+         if (this.loggedIn) {
+            return __WEBPACK_IMPORTED_MODULE_1__AppStorge__["a" /* default */].getUser();
+         }
+      }
+   }, {
+      key: "id",
+      value: function id() {
+         if (this.loggedIn) {
+            var payload = __WEBPACK_IMPORTED_MODULE_0__Token__["a" /* default */].payload(__WEBPACK_IMPORTED_MODULE_1__AppStorge__["a" /* default */].getToken());
+            return payload.sub;
+         }
+      }
+   }]);
+
+   return User;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (User = new User());
+
+/***/ }),
+/* 67 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Token = function () {
+     function Token() {
+          _classCallCheck(this, Token);
+     }
+
+     _createClass(Token, [{
+          key: 'isValid',
+          value: function isValid(token) {
+               var payload = this.payload(token);
+               if (payload) {
+                    return payload.iss == 'http://localhost:8000/api/auth/login' ? true : false;
+               }
+               return false;
+          }
+     }, {
+          key: 'payload',
+          value: function payload(token) {
+               var payload = token.split('.')[1];
+               return this.decode(payload);
+          }
+     }, {
+          key: 'decode',
+          value: function decode(payload) {
+               return JSON.parse(atob(payload));
+          }
+     }]);
+
+     return Token;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Token = new Token());
+
+/***/ }),
+/* 68 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var AppStorge = function () {
+    function AppStorge() {
+        _classCallCheck(this, AppStorge);
+    }
+
+    _createClass(AppStorge, [{
+        key: 'storeToken',
+        value: function storeToken(token) {
+            localStorage.setItem('token', token);
+        }
+    }, {
+        key: 'storeUser',
+        value: function storeUser(user) {
+            localStorage.setItem('user', user);
+        }
+    }, {
+        key: 'store',
+        value: function store(user, token) {
+            this.storeToken(token);
+            this.storeUser(user);
+        }
+    }, {
+        key: 'clear',
+        value: function clear() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+        }
+    }, {
+        key: 'getToken',
+        value: function getToken() {
+            return localStorage.getItem('token');
+        }
+    }, {
+        key: 'getUser',
+        value: function getUser() {
+            return localStorage.getItem('user');
+        }
+    }]);
+
+    return AppStorge;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (AppStorge = new AppStorge());
+
+/***/ }),
+/* 69 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

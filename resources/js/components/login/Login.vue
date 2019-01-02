@@ -1,8 +1,8 @@
 <template>
     <v-container>
     <v-form @submit.prevent="login">
-        <v-text-field label="Uesr Name" v-model="form.username" required></v-text-field>
-        <v-text-field label="Password" v-model="form.password" type="password" required></v-text-field>
+        <v-text-field label="Uesr Name" v-model="form.username" type="text" required></v-text-field>
+        <v-text-field label="Password" v-model="form.password" type="password" autocomplete="password" required></v-text-field>
         <v-btn color="blue" type="submit">Login</v-btn>
     </v-form>
   </v-container>
@@ -15,15 +15,12 @@ export default {
          form:{
              username:null,
              password:null
-
          }
      }
  },
  methods:{
      login(){
-         axios.post('/api/auth/login',this.form)
-         .then(res=>console.log(res.data))
-      .catch(error=>console.log(error.response.data))
+       User.login(this.form)
      }
  }
 }
