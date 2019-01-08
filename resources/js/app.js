@@ -33,8 +33,7 @@ Vue.component('AppHome', require('./components/AppHome.vue'));
 import router from './router/router.js';
 import user from './helpers/User.js';
 window.User = user;
-User.logout();
-
+window.EventBus=new Vue();
 const app = new Vue({
     router
   }).$mount('#app')

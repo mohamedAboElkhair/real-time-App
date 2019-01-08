@@ -9,12 +9,14 @@ class User{
       .catch(error=>console.log(error.response.data))
    
    }
+   
    responseAfterLogin(res){
-      const access_token =res.data.access_token
-     const username= res.data.user
-    if(Token.isValid(access_token)){
-      AppStorge.store(username , access_token) 
-      } 
+     const access_token =res.data.access_token;
+      const username= res.data.user;
+         if(Token.isValid(access_token)){
+           AppStorge.store(username , access_token) 
+           window.location='/fourm'
+       } 
    }
    hasToken(){
       const storeToken=AppStorge.getToken();
@@ -27,7 +29,8 @@ class User{
       return this.hasToken();
    }  
    logout(){
-   AppStorge.clear()
+      AppStorge.clear();
+      window.location='/'
    } 
    name(){
       if(this.loggedIn){

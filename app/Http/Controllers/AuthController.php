@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use Illuminate\Http\Request;
+use App\Http\Requests\SignupRequest;
 
 class AuthController extends Controller
 {
@@ -34,7 +35,7 @@ class AuthController extends Controller
         return $this->respondWithToken($token);
     }
 
-    public function singup(Request $request)
+    public function singup(SignupRequest $request)
     {
         User::create($request->all());
         return $this->login($request);
