@@ -37,9 +37,10 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        // auth()->user()->Question()->create($request->all());
-        Question::create($request->all()); // without Authid
-        return Response('created', Response::HTTP_CREATED);
+        // $request['slug'] = str_slug($request->titel);
+        $question = auth()->user()->question()->create($request->all());
+        // Question::create($request->all()); // without Authid
+        return Response(new QuestionResource($question), Response::HTTP_CREATED);
     }
 
     /**

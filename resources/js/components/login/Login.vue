@@ -21,7 +21,7 @@ export default {
  },
     created() {
         if(User.loggedIn()){
-     //   this.$router.push({name:'fourm'});
+        this.$router.push({name:'fourm'});
         }
     },
  methods:{
